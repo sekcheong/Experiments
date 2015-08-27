@@ -170,10 +170,12 @@ static class Program
 	}
 	
 	static void Main()
-	{		
-		List<int> list = new List<int>(6000000);
+	{
+		const int REPEATS = 10;
+		const int SIZE = 8000000;
+		List<int> list = new List<int>(SIZE);
 		Random rand = new Random(12345);
-		for (int i = 0; i < 6000000; i++) {
+		for (int i = 0; i < SIZE; i++) {
 			list.Add(rand.Next(5000));
 		}
 		int[] arr = list.ToArray();
@@ -182,10 +184,11 @@ static class Program
 		foreach (int v in list) {
 			darr.Add(v);
 		}
-		int hits = 0;
-		int chk = 0;
+
+		long hits = 0;
+		long chk = 0;
 		Stopwatch watch = Stopwatch.StartNew();
-		for (int rpt = 0; rpt < 100; rpt++) {
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			int len = list.Count;
 			for (int i = 0; i < len; i++) {
 				chk += list[i];
@@ -198,11 +201,11 @@ static class Program
 		chk = 0;
 		hits = 0;
 		watch = Stopwatch.StartNew();
-		for (int rpt = 0; rpt < 100; rpt++) {
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			for (int i = 0; i < arr.Length; i++) {
 				chk += arr[i];
 				hits++;
-			}
+			}			
 		}
 		watch.Stop();
 		Console.WriteLine("Array/for: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
@@ -211,8 +214,8 @@ static class Program
 		chk = 0;
 		hits = 0;
 		watch = Stopwatch.StartNew();
-		int[] arr2 = darr.Shrink();		
-		for (int rpt = 0; rpt < 100; rpt++) {
+		int[] arr2 = darr.Shrink();
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			for (int i = 0; i < arr2.Length; i++) {
 				chk += arr2[i];
 				hits++;
@@ -224,7 +227,7 @@ static class Program
 
 		chk = 0;
 		watch = Stopwatch.StartNew();
-		for (int rpt = 0; rpt < 100; rpt++) {
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			foreach (int i in list) {
 				chk += i;
 			}
@@ -234,7 +237,7 @@ static class Program
 
 		chk = 0;
 		watch = Stopwatch.StartNew();
-		for (int rpt = 0; rpt < 100; rpt++) {
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			foreach (int i in arr) {
 				chk += i;
 			}
@@ -243,10 +246,11 @@ static class Program
 		Console.WriteLine("Array/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 
-		chk = 0;
+		chk = 0;		
 		watch = Stopwatch.StartNew();
-		for (int rpt = 0; rpt < 100; rpt++) {
-			foreach (int i in darr) {
+		int[] c = darr.Shrink();
+		for (int rpt = 0; rpt < REPEATS; rpt++) {
+			foreach (int i in c) {
 				chk += i;
 			}
 		}
