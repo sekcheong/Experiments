@@ -4,14 +4,15 @@ using System.Diagnostics;
 
 static class Program
 {
-	public class DynamicArray<T>:IEnumerable<T> {
+	public class DynamicArray<T> : IEnumerable<T>
+	{
 
 		private T[] _items;
 		private int _capacity;
 		private double _loadFactor;
 		private const double DEFAULT_LOADFACTOR = 0.5;
 		private const int DEFAULT_CAPACITY = 16;
-		private int _count;
+		private int _count;		
 
 		public DynamicArray()
 		{
@@ -115,22 +116,58 @@ static class Program
 
 
 		public IEnumerator<T> GetEnumerator()
-		{
-			Shrink();
-			foreach (T v in _items) {
-				yield return v;
-			}
+		{			
+			return new DynamicArrayEnumerator<T>(_items, _count);
 		}
 
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			Shrink();
+		{		
 			return _items.GetEnumerator();
 		}
+
 	}
 
 
+	public class DynamicArrayEnumerator<T> : IEnumerator<T>
+	{
+		private T[] _items;
+		private int _count;
+		private int _pos;
+
+		public DynamicArrayEnumerator(T[] items, int count)
+		{
+			this.Reset();
+			_items = items;
+			_count = count;
+		}
+
+		public T Current
+		{
+			get { return _items[_pos]; }
+		}
+
+		public void Dispose()
+		{
+			
+		}
+
+		object System.Collections.IEnumerator.Current
+		{
+			get { return  (object) _items[_pos]; }
+		}
+
+		public bool MoveNext()
+		{
+			_pos++;
+			return (_pos < _count);
+		}
+
+		public void Reset()
+		{
+			_pos = -1;
+		}
+	}
 	
 	static void Main()
 	{		
@@ -216,7 +253,7 @@ static class Program
 		watch.Stop();
 		Console.WriteLine("Dynamic Array/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
-		Console.ReadLine();
+		Console.ReadKey();
 	}
 }
 
