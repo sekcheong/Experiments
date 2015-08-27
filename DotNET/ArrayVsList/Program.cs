@@ -96,20 +96,16 @@ static class Program
 		{
 			int size = (int)((double)_items.Length / _loadFactor);
 			T[] s = new T[size];
-			for (int i = 0; i < _count; i++) {
-				s[i] = _items[i];
-			}
+			Array.Copy(_items, s, _count);
 			_items = s;
 		}
 
 		
-		public T[] Shrink()
+		public T[] Compact()
 		{
 			if (_items.Length == _count) return _items;
 			T[] s = new T[_count];
-			for (int i = 0; i < _count; i++) {
-				s[i] = _items[i];
-			}
+			Array.Copy(_items, s, _count);
 			s = _items;
 			return _items;
 		}
@@ -171,7 +167,7 @@ static class Program
 	
 	static void Main()
 	{
-		const int REPEATS = 100;
+		const int REPEATS = 50;
 		const int SIZE = 1000000;
 		List<int> list = new List<int>(SIZE);
 		Random rand = new Random(12345);
@@ -196,7 +192,7 @@ static class Program
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("List/for: {0}ms ({1})  ", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("List/for      : {0}ms ({1})  ", watch.ElapsedMilliseconds, chk);
 
 		chk = 0;
 		hits = 0;
@@ -208,13 +204,13 @@ static class Program
 			}			
 		}
 		watch.Stop();
-		Console.WriteLine("Array/for: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("Array/for     : {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 
 		chk = 0;
 		hits = 0;
 		watch = Stopwatch.StartNew();
-		int[] arr2 = darr.Shrink();
+		int[] arr2 = darr.Compact();
 		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			for (int i = 0; i < arr2.Length; i++) {
 				chk += arr2[i];
@@ -222,7 +218,7 @@ static class Program
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("Dynamic Array/for: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("DArray/for    : {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 
 
@@ -235,7 +231,7 @@ static class Program
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("List/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("List/foreach  : {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 		chk = 0;
 		watch = Stopwatch.StartNew();
@@ -245,19 +241,19 @@ static class Program
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("Array/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("Array/foreach : {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 
 		chk = 0;		
 		watch = Stopwatch.StartNew();
-		int[] c = darr.Shrink();
+		int[] c = darr.Compact();
 		for (int rpt = 0; rpt < REPEATS; rpt++) {
 			foreach (int i in c) {
 				chk += i;
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("Dynamic Array/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
+		Console.WriteLine("DArray/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 		Console.WriteLine();
 		Console.WriteLine("Total number of hits: {0:N0}", hits);
 		Console.ReadKey();
