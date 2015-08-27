@@ -171,8 +171,8 @@ static class Program
 	
 	static void Main()
 	{
-		const int REPEATS = 10;
-		const int SIZE = 8000000;
+		const int REPEATS = 100;
+		const int SIZE = 1000000;
 		List<int> list = new List<int>(SIZE);
 		Random rand = new Random(12345);
 		for (int i = 0; i < SIZE; i++) {
@@ -196,7 +196,7 @@ static class Program
 			}
 		}
 		watch.Stop();
-		Console.WriteLine("List/for: {0}ms ({1}) hits:{2}", watch.ElapsedMilliseconds, chk, hits);
+		Console.WriteLine("List/for: {0}ms ({1})  ", watch.ElapsedMilliseconds, chk);
 
 		chk = 0;
 		hits = 0;
@@ -225,6 +225,8 @@ static class Program
 		Console.WriteLine("Dynamic Array/for: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
 
 
+
+		Console.WriteLine();
 		chk = 0;
 		watch = Stopwatch.StartNew();
 		for (int rpt = 0; rpt < REPEATS; rpt++) {
@@ -256,7 +258,8 @@ static class Program
 		}
 		watch.Stop();
 		Console.WriteLine("Dynamic Array/foreach: {0}ms ({1})", watch.ElapsedMilliseconds, chk);
-
+		Console.WriteLine();
+		Console.WriteLine("Total number of hits: {0:N0}", hits);
 		Console.ReadKey();
 	}
 }
